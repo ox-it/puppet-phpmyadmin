@@ -9,7 +9,7 @@ class phpmyadmin ($root_password, $phpmyadmin_password) {
 
 	exec { 'enable-mcrypt':
 		command => 'php5enmod mcrypt',
-		notify => Exec["reload-apache2"],
+		notify => Class['Apache::Service'],
 		refreshonly => true,
 	}
 
@@ -51,7 +51,7 @@ class phpmyadmin ($root_password, $phpmyadmin_password) {
 		owner => 'root',
 		group => 'root',
 		source => 'puppet:///modules/phpmyadmin/config.inc.php',
-		notify => Exec["reload-apache2"],
+		notify => Class['Apache::Service'],
 		require => File['/etc/phpmyadmin'],
 		mode => 0644,
 	}
@@ -59,7 +59,7 @@ class phpmyadmin ($root_password, $phpmyadmin_password) {
 	file { '/etc/apache2/conf-enabled/phpmyadmin.conf':
 		ensure => link,
 		target => '/etc/phpmyadmin/apache.conf',
-		notify => Exec["reload-apache2"],
+		notify => Class['Apache::Service'],
 		require => Package['phpmyadmin'],
 	}
 
